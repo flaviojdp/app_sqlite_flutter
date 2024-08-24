@@ -1,7 +1,8 @@
+import 'package:app_sqlite_flutter/src/app_sqlite_flutter.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const AppSqliteFlutter());
 }
 
 class MyApp extends StatelessWidget {
