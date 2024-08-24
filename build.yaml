@@ -1,0 +1,7 @@
+targets:
+  $default:
+    builders:
+      drift_dev:
+        generate_for:
+          - lib/src/drift/**
+          - lib/src/drift/repositories/**
