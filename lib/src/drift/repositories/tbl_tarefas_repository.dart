@@ -12,10 +12,7 @@ class TblTarefasRepository extends DatabaseAccessor<DbDrift> with _$TblTarefasRe
     return select(tblTarefas).get();
   }
 
-  Future<int> insert(String descricao){
-    var tbl = TblTarefasCompanion(
-      description: Value(descricao)
-    );
+  Future<int> insert(TblTarefasCompanion tbl){
     return into(tblTarefas).insert(tbl);
   }
 }

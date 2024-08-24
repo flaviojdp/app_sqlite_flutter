@@ -1,3 +1,8 @@
+import 'package:app_sqlite_flutter/src/app/parse/tbl_tarefas_repository_domain.dart';
+import 'package:app_sqlite_flutter/src/app/tarefas/cp_tarefas_list.dart';
+import 'package:app_sqlite_flutter/src/app/tarefas/tarefas_entity.dart';
+import 'package:app_sqlite_flutter/src/app/tarefas/tarefas_repository_domain.dart';
+import 'package:app_sqlite_flutter/src/app/tarefas/tarefas_services.dart';
 import 'package:app_sqlite_flutter/src/drift/db_drift.dart';
 import 'package:app_sqlite_flutter/src/drift/repositories/tbl_tarefas_repository.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +15,8 @@ class AppHome extends StatefulWidget {
 }
 
 class _AppHomeState extends State<AppHome> {
-  TblTarefasRepository rep = TblTarefasRepository(DbDrift());
-  List<Tarefas> tarefas = [];
+  TarefasServices services = TarefasServices(TblTarefasRepositoryDomain(TblTarefasRepository(DbDrift())));
+  List<TarefasEntity> tarefas = [];
 
   @override
   void initState() {
@@ -37,22 +42,31 @@ class _AppHomeState extends State<AppHome> {
         title: Text('App SQLite Flutter'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              inserirTarefa("Tarefa: ${tarefas.length}").then((value) => buscarTarefas().then((t){
+                setState(() {
+                  tarefas = t;
+                });
+              }));
+            },
             icon: Icon(Icons.add),
           )
         ],
       ),
       body: Center(
-        child: Text('App ${tarefas}'),
+        child: CpTarefasList(lista: tarefas.map((e) => TarefasEntity(id: e.id, description: e.description)).toList(),),
       ),
     );
   }
 
-  Future<List<Tarefas>> buscarTarefas() async {
-    return await rep.getAll();
+  Future<List<TarefasEntity>> buscarTarefas() async {
+    return await services.getAll();
   }
 
   Future<int> inserirTarefa(String descricao) async {
-    return await rep.insert(descricao);
+    return await services.inserir(TarefasEntity(
+      id: null,
+      description: descricao
+    ));
   }
 }
