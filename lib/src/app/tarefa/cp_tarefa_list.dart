@@ -1,4 +1,6 @@
 import 'package:app_sqlite_flutter/src/app/parse/tbl_tarefa_repository_domain.dart';
+import 'package:app_sqlite_flutter/src/app/tarefa/cp_tarefa.dart';
+import 'package:app_sqlite_flutter/src/app/tarefa/tarefa_controller.dart';
 import 'package:app_sqlite_flutter/src/app/tarefa/tarefa_entity.dart';
 import 'package:app_sqlite_flutter/src/app/tarefa/tarefa_repository_domain.dart';
 import 'package:app_sqlite_flutter/src/app/tarefas/tarefas_entity.dart';
@@ -17,35 +19,68 @@ class CpTarefaList extends StatefulWidget {
 class _CpTarefaListState extends State<CpTarefaList> {
   _CpTarefaListState(this.tarefas);
 
+  late TarefaController controller;
+
   final TarefasEntity tarefas;
 
   final List<TarefaEntity> detalhes = [];
 
-  //final List<String> detalhes = ["Teste aaa"];
-
-  final TarefaRepositoryDomain rep = TblTarefaRepositoryDomain(GetIt.I());
-
   @override
-  void initState() {
-    debugPrint(tarefas.id.toString());
-    rep.getAllByTarefa(tarefas.id!).then((value) {
-      detalhes.clear();
-      setState(() {
-        detalhes.addAll(value);
-      });
-    });
-  }
+  void initState() {}
 
   @override
   Widget build(BuildContext context) {
+    this.controller = TarefaController(
+      TblTarefaRepositoryDomain(GetIt.I()),
+      tarefas: tarefas,
+      context: context,
+    );
+    controller.getAllByTarefa(tarefas.id!).then((value) => definirDetalhes(value));
     return detalhes.isEmpty
-        ? Container()
-        : ListView.builder(
-            itemBuilder: (context, idx) => Text(detalhes[idx].description),
-            itemCount: this.detalhes.length,
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
+        ? BtnAdd(controller: controller)
+        : Container(
+            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
+            padding: const EdgeInsets.all(8.0),
+            child: ListView.builder(
+              itemBuilder: (context, idx) {
+                if (idx >= detalhes.length) {
+                  return BtnAdd(controller: controller);
+                }
+                return CpTarefa(
+                  tarefa: detalhes[idx],
+                  editar: (tarefa) async {
+                    await controller.editar(tarefa);
+                    definirDetalhes(await controller.getAllByTarefa(tarefas.id!));
+                  },
+                  remover: controller.remover,
+                );
+              },
+              itemCount: this.detalhes.length + 1,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+            ),
           );
-    //return Text("aaa");
+  }
+
+  definirDetalhes(List<TarefaEntity> detalhes) {
+    this.detalhes.clear();
+    setState(() {
+      this.detalhes.addAll(detalhes);
+    });
+  }
+}
+class BtnAdd extends StatelessWidget {
+  BtnAdd({super.key, required this.controller});
+
+  final TarefaController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () async {
+        await this.controller.inserir();
+      },
+      child: Text("Novo detalhe"),
+    );
   }
 }

@@ -16,12 +16,10 @@ class TarefaEntity {
   }
 
   int? get id => _id;
-
   String get description => _description;
+  TarefasEntity get tarefas => _tarefas;
 
-  set setDescription(String description) {
-    _description = description;
-  }
+  void setDescription(String description) => _description = description;
 
   @override
   String toString() {

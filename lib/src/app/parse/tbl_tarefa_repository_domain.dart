@@ -1,5 +1,6 @@
 import 'package:app_sqlite_flutter/src/app/tarefa/tarefa_entity.dart';
 import 'package:app_sqlite_flutter/src/app/tarefa/tarefa_repository_domain.dart';
+import 'package:app_sqlite_flutter/src/drift/db_drift.dart';
 import 'package:app_sqlite_flutter/src/drift/repositories/tbl_tarefa_repository.dart';
 
 class TblTarefaRepositoryDomain implements TarefaRepositoryDomain {
@@ -8,42 +9,31 @@ class TblTarefaRepositoryDomain implements TarefaRepositoryDomain {
   final TblTarefaRepository repository;
 
   @override
-  Future<List<TarefaEntity>> getAllByTarefas(int tarefas) {
-    return repository.getDetalhesByTarefaId(tarefas).then((v) => v.map((e) => TarefaEntity(id: e.id, description: e.description, tarefa: e.tarefa)).toList());
-  }
-
-  @override
   Future<int> editar(TarefaEntity entity) {
-    // TODO: implement editar
-    throw UnimplementedError();
+    return repository.editar(entity);
   }
 
   @override
-  Future<List<TarefaEntity>> getAll() {
-    // TODO: implement getAll
-    throw UnimplementedError();
+  Future<List<TarefaEntity>> getAll() async {
+    return toListTarefaEntity(await repository.getAll());
   }
 
   @override
   Future<List<TarefaEntity>> getAllByTarefa(int tarefas) {
-    return repository.getDetalhesByTarefaId(tarefas).then(
-          (v) => v
-              .map(
-                (e) => TarefaEntity(id: e.id, description: e.description, tarefa: e.tarefa),
-              )
-              .toList(),
-        );
+    return repository.getDetalhesByTarefaId(tarefas).then((v) => toListTarefaEntity(v));
+  }
+
+  List<TarefaEntity> toListTarefaEntity(List<Tarefa> listTarefa) {
+    return listTarefa.map((e) => TarefaEntity(id: e.id, description: e.description, tarefa: e.tarefa)).toList();
   }
 
   @override
   Future<int> insert(TarefaEntity entity) {
-    // TODO: implement insert
-    throw UnimplementedError();
+    return repository.insert(entity);
   }
 
   @override
   Future<int> remover(TarefaEntity entity) {
-    // TODO: implement remover
-    throw UnimplementedError();
+    return repository.remover(entity);
   }
 }
