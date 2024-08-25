@@ -22,4 +22,8 @@ class TblTarefasRepository extends DatabaseAccessor<DbDrift> with _$TblTarefasRe
   Future<int> editar(TarefasEntity entity) {
     return (update(tblTarefas)..where((tbl) => tbl.id.equals(entity.id!))).write(TblTarefasCompanion(description: Value(entity.description)));
   }
+
+  Future<int> remover(TarefasEntity entity){
+    return (this.delete(tblTarefas)..where((tbl) => tbl.id.equals(entity.id!))).go();
+  }
 }

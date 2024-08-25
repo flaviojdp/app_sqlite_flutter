@@ -4,4 +4,5 @@ abstract class TarefasRepositoryDomain {
   Future<List<TarefasEntity>> getAll();
   Future<int> insert(TarefasEntity entity);
   Future<int> editar(TarefasEntity entity);
+  Future<int> remover(TarefasEntity entity);
 }

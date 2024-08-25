@@ -22,4 +22,9 @@ class TblTarefasRepositoryDomain implements TarefasRepositoryDomain{
     return repository.editar(entity);
   }
 
+  @override
+  Future<int> remover(TarefasEntity entity) {
+    return repository.remover(entity);
+  }
+
 }

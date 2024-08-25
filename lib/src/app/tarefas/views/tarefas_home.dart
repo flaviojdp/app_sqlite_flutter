@@ -56,6 +56,7 @@ class _TarefasHomeState extends State<TarefasHome> {
         child: CpTarefasList(
           lista: tarefas, // tarefas.map((e) => TarefasEntity(id: e.id, description: e.description)).toList(),
           editar: editar,
+          remover: remover,
         ),
       ),
     );
@@ -74,8 +75,6 @@ class _TarefasHomeState extends State<TarefasHome> {
 
   Future<int> inserirTarefa(TarefasEntity entity) async {
     return await services.inserir(entity);
-
-    //return Future(() => 1);
   }
 
   void editar(TarefasEntity entity) async {
@@ -85,5 +84,10 @@ class _TarefasHomeState extends State<TarefasHome> {
       services.editar(editar);
       definirTarefas(await buscarTarefas());
     }
+  }
+
+  void remover(TarefasEntity entity) async {
+    await services.remover(entity);
+    definirTarefas(await buscarTarefas());
   }
 }
