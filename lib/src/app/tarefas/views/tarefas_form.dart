@@ -15,24 +15,30 @@ class TarefasForm extends StatelessWidget {
       ),
       body: Container(
         child: Center(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Cadastrar..."),
-                Text("Cadastrar..."),
-                TextFormField(
-                  initialValue: entity.description,
-                  onChanged: (v) => entity.description = v,
-                  validator: (v) {
-                    if (v == null || (v != null && v!.isEmpty)) {
-                      return "Informe uma descrição";
-                    }
-                  },
-                ),
-              ],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0 * 3),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      labelText  : "Descrição da tarefa",
+                      hintText  : "Descrição da tarefa"
+                    ),
+                    initialValue: entity.description,
+                    onChanged: (v) => entity.description = v,
+                    validator: (v) {
+                      if (v == null || (v != null && v!.isEmpty)) {
+                        return "Informe uma descrição";
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
