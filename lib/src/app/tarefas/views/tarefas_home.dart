@@ -41,16 +41,10 @@ class _TarefasHomeState extends State<TarefasHome> {
             IconButton(
               onPressed: () async {
                 TarefasEntity? ok = await Navigator.push(context, MaterialPageRoute(builder: (context) => TarefasForm()));
-                if(ok != null){
-
+                if (ok != null) {
                   inserirTarefa(ok);
                 }
-                buscarTarefas().then((t) {
-                  setState(() {
-                    tarefas.clear();
-                    tarefas.addAll(t);
-                  });
-                });
+                definirTarefas(await buscarTarefas());
               },
               icon: Icon(Icons.add),
             ),
@@ -60,10 +54,18 @@ class _TarefasHomeState extends State<TarefasHome> {
       ),
       body: Center(
         child: CpTarefasList(
-          lista: tarefas.map((e) => TarefasEntity(id: e.id, description: e.description)).toList(),
+          lista: tarefas, // tarefas.map((e) => TarefasEntity(id: e.id, description: e.description)).toList(),
+          editar: editar,
         ),
       ),
     );
+  }
+
+  void definirTarefas(List<TarefasEntity> tarefas) {
+    this.tarefas.clear();
+    setState(() {
+      this.tarefas.addAll(tarefas);
+    });
   }
 
   Future<List<TarefasEntity>> buscarTarefas() async {
@@ -74,5 +76,14 @@ class _TarefasHomeState extends State<TarefasHome> {
     return await services.inserir(entity);
 
     //return Future(() => 1);
+  }
+
+  void editar(TarefasEntity entity) async {
+    TarefasEntity? editar = await Navigator.push(context, MaterialPageRoute(builder: (context) => TarefasForm(entity: entity)));
+    print(editar?.description);
+    if (editar != null) {
+      services.editar(editar);
+      definirTarefas(await buscarTarefas());
+    }
   }
 }

@@ -2,9 +2,9 @@ import 'package:app_sqlite_flutter/src/app/tarefas/tarefas_entity.dart';
 import 'package:flutter/material.dart';
 
 class TarefasForm extends StatelessWidget {
-  TarefasForm({super.key});
+  TarefasForm({super.key, TarefasEntity? entity}) : this.entity = entity ?? TarefasEntity.vazio();
 
-  final TarefasEntity entity = TarefasEntity.vazio();
+  final TarefasEntity entity;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -24,6 +24,7 @@ class TarefasForm extends StatelessWidget {
                 Text("Cadastrar..."),
                 Text("Cadastrar..."),
                 TextFormField(
+                  initialValue: entity.description,
                   onChanged: (v) => entity.description = v,
                   validator: (v) {
                     if (v == null || (v != null && v!.isEmpty)) {

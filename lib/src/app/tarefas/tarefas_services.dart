@@ -13,4 +13,9 @@ class TarefasServices {
   Future<int> inserir(TarefasEntity entity){
     return repositoryDomain.insert(entity);
   }
+
+  Future<int> editar(TarefasEntity entity){
+    return repositoryDomain.editar(entity);
+  }
+
 }

@@ -1,8 +1,6 @@
 import 'package:app_sqlite_flutter/src/app/tarefas/tarefas_entity.dart';
 import 'package:app_sqlite_flutter/src/app/tarefas/tarefas_repository_domain.dart';
-import 'package:app_sqlite_flutter/src/drift/db_drift.dart';
 import 'package:app_sqlite_flutter/src/drift/repositories/tbl_tarefas_repository.dart';
-import 'package:drift/drift.dart';
 
 class TblTarefasRepositoryDomain implements TarefasRepositoryDomain{
 
@@ -16,9 +14,12 @@ class TblTarefasRepositoryDomain implements TarefasRepositoryDomain{
 
   @override
   Future<int> insert(TarefasEntity entity) {
-    return repository.insert(TblTarefasCompanion(
-      description: Value(entity.description)
-    ));
+    return repository.insert(entity);
+  }
+
+  @override
+  Future<int> editar(TarefasEntity entity) {
+    return repository.editar(entity);
   }
 
 }
