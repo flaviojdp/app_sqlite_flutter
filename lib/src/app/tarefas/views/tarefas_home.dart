@@ -1,10 +1,9 @@
-import 'package:app_sqlite_flutter/src/app/parse/tbl_tarefas_repository_domain.dart';
 import 'package:app_sqlite_flutter/src/app/tarefas/cp_tarefas_list.dart';
 import 'package:app_sqlite_flutter/src/app/tarefas/tarefas_entity.dart';
 import 'package:app_sqlite_flutter/src/app/tarefas/tarefas_services.dart';
-import 'package:app_sqlite_flutter/src/drift/db_drift.dart';
-import 'package:app_sqlite_flutter/src/drift/repositories/tbl_tarefas_repository.dart';
+import 'package:app_sqlite_flutter/src/app/tarefas/views/tarefas_form.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class TarefasHome extends StatefulWidget {
   TarefasHome({super.key});
@@ -14,7 +13,7 @@ class TarefasHome extends StatefulWidget {
 }
 
 class _TarefasHomeState extends State<TarefasHome> {
-  final TarefasServices services = TarefasServices(TblTarefasRepositoryDomain(TblTarefasRepository(DbDrift())));
+  final TarefasServices services = GetIt.I();
   final List<TarefasEntity> tarefas = [];
 
   @override
@@ -41,7 +40,11 @@ class _TarefasHomeState extends State<TarefasHome> {
             ),
             IconButton(
               onPressed: () async {
-                await inserirTarefa("Tarefas: ${tarefas.length}");
+                TarefasEntity? ok = await Navigator.push(context, MaterialPageRoute(builder: (context) => TarefasForm()));
+                if(ok != null){
+
+                  inserirTarefa(ok);
+                }
                 buscarTarefas().then((t) {
                   setState(() {
                     tarefas.clear();
@@ -67,7 +70,9 @@ class _TarefasHomeState extends State<TarefasHome> {
     return await services.getAll();
   }
 
-  Future<int> inserirTarefa(String descricao) async {
-    return await services.inserir(TarefasEntity(id: null, description: descricao));
+  Future<int> inserirTarefa(TarefasEntity entity) async {
+    return await services.inserir(entity);
+
+    //return Future(() => 1);
   }
 }
