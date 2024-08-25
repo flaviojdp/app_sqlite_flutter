@@ -22,7 +22,7 @@ class CpTarefasList extends StatelessWidget {
           children: [
             IconButton(
               onPressed: editar != null ? () => editar!(lista[idx]) : null,
-              icon: Icon(Icons.edit),
+              icon: Icon(Icons.edit, color: Colors.amberAccent,),
             ),
             IconButton(
               onPressed: remover != null ? () => remover!(lista[idx]) : null,
